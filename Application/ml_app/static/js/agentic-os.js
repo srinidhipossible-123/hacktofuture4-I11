@@ -79,9 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const textArea = document.querySelector('.dz-text');
         
         let fileTypeTag = "Media";
-        if(file.type.startsWith('audio/')) fileTypeTag = "Audio";
-        else if(file.type.startsWith('video/')) fileTypeTag = "Video";
-        else if(file.type.startsWith('image/')) fileTypeTag = "Image";
+        const seqSlider = document.querySelector('.sequence-slider');
+        if(file.type.startsWith('audio/')) {
+            fileTypeTag = "Audio";
+            if (seqSlider) seqSlider.style.display = 'none';
+        }
+        else if(file.type.startsWith('video/')) {
+            fileTypeTag = "Video";
+            if (seqSlider) seqSlider.style.display = 'block';
+        }
+        else if(file.type.startsWith('image/')) {
+            fileTypeTag = "Image";
+            if (seqSlider) seqSlider.style.display = 'none';
+        }
 
         textArea.innerHTML = `<span class="neon-cyan">${file.name}</span> Securely Locked`;
         document.querySelector('.dz-subtext').innerText = `Ready for ${fileTypeTag} Forensic Extraction`;
@@ -105,56 +115,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMockAudioOrImage = !selectedFile.type.startsWith('video/');
 
         try {
-            if(!isMockAudioOrImage) {
-                // Real Video Process
-                const formData = new FormData();
-                formData.append('upload_video_file', selectedFile);
-                formData.append('sequence_length', selectedSequence);
+            // Unified logic for all media
+            const formData = new FormData();
+            formData.append('upload_video_file', selectedFile);
+            formData.append('sequence_length', selectedSequence);
 
-                const upRes = await fetch('/api/upload/', { method: 'POST', body: formData, headers: {'X-CSRFToken': getCookie('csrftoken')} });
-                const upData = await upRes.json();
-                if (upData.error) throw new Error(upData.error);
-                
-                updatePipeline(2);
-                typeWriter('swarm-terminal-output', "Upload Complete. Activating Isometric Swarm...");
-                runAgentSwarm();
+            const upRes = await fetch('/api/upload/', { method: 'POST', body: formData, headers: {'X-CSRFToken': getCookie('csrftoken')} });
+            const upData = await upRes.json();
+            if (upData.error) throw new Error(upData.error);
+            
+            updatePipeline(2);
+            typeWriter('swarm-terminal-output', "Upload Complete. Activating Isometric Swarm...");
+            runAgentSwarm();
 
-                const predRes = await fetch('/api/predict/', { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} });
-                const predData = await predRes.json();
-                if (predData.error) throw new Error(predData.error);
-                
-                finishSwarm();
-                updatePipeline(4);
-                setTimeout(() => showResults(predData), 1000);
-            } 
-            else {
-                // Mock Process for Audio/Image Design constraints
-                updatePipeline(2);
-                typeWriter('swarm-terminal-output', "Initializing Interface logic for Audio/Image Diagnostics...");
-                runAgentSwarm();
-                
-                // Simulate 5 seconds processing
-                await new Promise(r => setTimeout(r, 6000));
-                
-                finishSwarm();
-                updatePipeline(4);
-
-                // Mock Result Data
-                const isAudio = selectedFile.type.startsWith('audio/');
-                const isReal = Math.random() > 0.5;
-                const conf = isReal ? (90 + Math.random()*9) : (85 + Math.random()*14);
-                
-                const mockOutput = {
-                    output: isReal ? "REAL" : "FAKE",
-                    confidence: conf.toFixed(1),
-                    threat_data: Array.from({length: 40}, () => isReal ? Math.random() * 30 : Math.random() * 80 + 20),
-                    explanation: isReal ? `Neural analysis verified ${isAudio ? "vocal tract constraints" : "noise consistency"} as biological origin.` : `Neural analysis detected ${isAudio ? "synthetic modulation and unnatural pitch variations" : "generative artifacts and frequency mismatches"} in the provided ${isAudio ? "audio waveform" : "image"}.`,
-                    isAudioMock: isAudio,
-                    isImageMock: !isAudio
-                };
-                
-                setTimeout(() => showResults(mockOutput), 1000);
-            }
+            const predRes = await fetch('/api/predict/', { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} });
+            const predData = await predRes.json();
+            if (predData.error) throw new Error(predData.error);
+            
+            finishSwarm();
+            updatePipeline(4);
+            setTimeout(() => showResults(predData), 1000);
 
         } catch (err) {
             typeWriter('swarm-terminal-output', `<span style="color:red">CRITICAL FAILURE: ${err.message}</span>`);
