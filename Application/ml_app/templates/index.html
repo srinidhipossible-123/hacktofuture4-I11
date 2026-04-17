@@ -111,25 +111,29 @@
                                 <!-- Central File Node -->
                                 <div class="node core-node">
                                     <div class="core-pulse"></div>
-                                    <div class="node-label" id="processing-media-type">MEDIA CUBE</div>
+                                    <div class="node-label" id="processing-media-type">ORCHESTRATOR AGENT</div>
                                 </div>
 
                                 <!-- Satellite Agents -->
                                 <div class="node agent-node" id="agent-1" style="--angle: 0deg;">
                                     <div class="agent-core"></div>
-                                    <div class="node-label">Forensic Agent</div>
+                                    <div class="node-label">Frame Intelligence</div>
                                 </div>
-                                <div class="node agent-node" id="agent-2" style="--angle: 90deg;">
+                                <div class="node agent-node" id="agent-2" style="--angle: 72deg;">
                                     <div class="agent-core"></div>
-                                    <div class="node-label">Detection Agent</div>
+                                    <div class="node-label">Multi-Modal Detection</div>
                                 </div>
-                                <div class="node agent-node" id="agent-3" style="--angle: 180deg;">
+                                <div class="node agent-node" id="agent-3" style="--angle: 144deg;">
                                     <div class="agent-core"></div>
-                                    <div class="node-label">Metadata Agent</div>
+                                    <div class="node-label">Evidence Aggregator</div>
                                 </div>
-                                <div class="node agent-node" id="agent-4" style="--angle: 270deg;">
+                                <div class="node agent-node" id="agent-4" style="--angle: 216deg;">
                                     <div class="agent-core"></div>
-                                    <div class="node-label">Verification Agent</div>
+                                    <div class="node-label">Context Verification</div>
+                                </div>
+                                <div class="node agent-node" id="agent-5" style="--angle: 288deg;">
+                                    <div class="agent-core"></div>
+                                    <div class="node-label">Adversarial Detection</div>
                                 </div>
 
                                 <!-- Data streams (SVG connecting lines) -->
@@ -241,16 +245,27 @@
                                 </div>
                                 
                                 <!-- C2PA Timeline Mock -->
-                                <div class="c2pa-timeline">
+                                <div class="c2pa-timeline" id="confidence-breakdown-ui">
+                                    <div style="font-size:0.8rem; letter-spacing:1px; color:#aaa; margin-bottom:10px;">EVIDENCE AGGREGATOR BREAKDOWN</div>
                                     <div class="timeline-step">
-                                        <div class="t-node valid"></div> <div class="t-text">Origin Verified</div>
+                                        <div class="t-node valid" id="cb-node-1"></div>
+                                        <div class="t-text" style="display:flex; justify-content:space-between; width:100%;">
+                                            <span>Spatial Inconsistencies</span> <span id="cb-score-1" style="color:var(--neon-cyan)">--</span>
+                                        </div>
                                     </div>
                                     <div class="timeline-step">
-                                        <div class="t-node valid"></div> <div class="t-text">Hash Integrity Check</div>
+                                        <div class="t-node valid" id="cb-node-2"></div>
+                                        <div class="t-text" style="display:flex; justify-content:space-between; width:100%;">
+                                            <span>Temporal & Artifact Mismatch</span> <span id="cb-score-2" style="color:var(--neon-cyan)">--</span>
+                                        </div>
                                     </div>
                                     <div class="timeline-step" id="t-final-node">
-                                        <div class="t-node alert"></div> <div class="t-text" id="t-final-text">Deepfake Artifacts</div>
+                                        <div class="t-node alert" id="cb-node-3"></div>
+                                        <div class="t-text" style="display:flex; justify-content:space-between; width:100%;" id="t-final-text">
+                                            <span>Model Base Confidence</span> <span id="cb-score-3" style="color:var(--alert-crimson)">--</span>
+                                        </div>
                                     </div>
+                                    <button class="cyber-btn mt-4" id="why-fake-btn" style="width:100%; font-size:0.85rem; padding:6px; box-shadow:0 0 10px rgba(255,0,85,0.4);">WHY IS THIS CLASSIFIED AS FAKE?</button>
                                 </div>
 
                                 <button id="reset-btn" class="cyber-btn w-full mt-4">INITIALIZE NEW SCAN</button>

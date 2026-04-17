@@ -107,6 +107,9 @@ STATICFILES_DIRS = [
 CONTENT_TYPES = ['video']
 MAX_UPLOAD_SIZE = "104857600"
 
+# Groq API Key for LLM Reasoning Agent
+GROQ_API_KEY = ""
+
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'uploaded_videos')

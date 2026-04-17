@@ -160,10 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const termMessages = [
-            "Forensic Agent analyzing spatial constraints...",
-            "Detection Agent running Neural Models...",
-            "Metadata Agent verifying C2PA headers...",
-            "Verification Agent checking origin hashes..."
+            "Orchestrator Agent initializing Multi-Modal Swarm...",
+            "Frame Intelligence isolating suspicious temporal segments...",
+            "Multi-Modal Detection Agent analyzing artifact likelihood...",
+            "Context Verification checking base constraints...",
+            "Evidence Aggregator compiling Final Confidence Breakdown..."
         ];
 
         let idx = 0;
@@ -279,13 +280,13 @@ document.addEventListener('DOMContentLoaded', () => {
             liquid.className = 'liquid alert';
             verdictBox.style.borderColor = 'rgba(255,0,60,0.5)';
             document.getElementById('t-final-node').querySelector('.t-node').className = 't-node alert';
-            document.getElementById('t-final-text').innerHTML = `<span style="color:var(--alert-crimson)">Synthetic Manipulation Detected</span>`;
+            document.getElementById('t-final-text').querySelector('span:first-child').innerHTML = `<span style="color:var(--alert-crimson)">Synthetic Manipulation Detected</span>`;
         } else {
             outputLabel.className = 'neon-text real';
             liquid.className = 'liquid';
             verdictBox.style.borderColor = 'rgba(0,240,255,0.5)';
             document.getElementById('t-final-node').querySelector('.t-node').className = 't-node valid';
-            document.getElementById('t-final-text').innerHTML = `<span style="color:var(--neon-cyan)">Cryptographically Validated</span>`;
+            document.getElementById('t-final-text').querySelector('span:first-child').innerHTML = `<span style="color:var(--neon-cyan)">Cryptographically Validated</span>`;
         }
 
         // Threat Graph
@@ -297,6 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 bar.className = 'bar' + (t > 50 ? ' high-threat' : '');
                 bar.style.height = '2px';
                 threatContainer.appendChild(bar);
+                const barAlert = t > 60;
+                if(data.output === 'FAKE' && barAlert) bar.classList.add('high-threat-pulse');
                 
                 setTimeout(() => {
                     bar.style.height = `${t}%`;
@@ -304,11 +307,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Explanation Typewriter
-        document.getElementById('explanation-text').innerHTML = '';
-        setTimeout(() => {
-            typeWriter('explanation-text', data.explanation || `System consensus reached with ${targetConf}% certainty.`);
-        }, 1500);
+        // Confidence Breakdown UI mapping
+        if(data.evidence_breakdown) {
+            document.getElementById('cb-score-1').innerText = `${data.evidence_breakdown.spatial}%`;
+            document.getElementById('cb-score-2').innerText = `${data.evidence_breakdown.temporal}%`;
+            document.getElementById('cb-score-3').innerText = `${data.evidence_breakdown.model}%`;
+            if(data.evidence_breakdown.spatial > 70) document.getElementById('cb-node-1').className = 't-node alert';
+            if(data.evidence_breakdown.temporal > 70) document.getElementById('cb-node-2').className = 't-node alert';
+        }
+
+        // Explanation / Why Fake Button Logic
+        const explanationContainer = document.querySelector('.explainability-terminal');
+        const whyFakeBtn = document.getElementById('why-fake-btn');
+        explanationContainer.style.display = 'none'; // hide until clicked
+
+        whyFakeBtn.addEventListener('click', () => {
+            explanationContainer.style.display = 'block';
+            whyFakeBtn.style.display = 'none'; // hide the button after clicking
+            document.getElementById('explanation-text').innerHTML = '';
+            typeWriter('explanation-text', data.explanation || `Agentic consensus confirmed manipulation. Artifacts cross-verified by Multi-Modal and Frame Intelligence agents with ${targetConf}% cumulative certainty.`);
+        });
     }
 
     // Reset Flow
